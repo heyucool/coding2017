@@ -100,7 +100,7 @@ public class ArrayUtil {
     /**
      * 斐波那契数列为：1，1，2，3，5，8，13，21......  ，给定一个最大值， 返回小于该值的数列
      * 例如， max = 15 , 则返回的数组应该为 [1，1，2，3，5，8，13]
-     * max = 1, 则返回空数组 []
+     * max = 1, 则返回空数组   []
      * @param max
      * @return
      */
@@ -111,7 +111,8 @@ public class ArrayUtil {
         arrayList.add(1);
 
         int i, num;
-        for (i = 2; (num = (int) (arrayList.get(i - 1)) + (int) (arrayList.get(i - 2))) < max; i++)
+        for (i = 2; (num = (int) (arrayList.get(i - 1))
+                + (int) (arrayList.get(i - 2))) < max; i++)
             arrayList.add(num);
 
         return ArrayUtil.toArray(arrayList);
@@ -163,10 +164,12 @@ public class ArrayUtil {
 
                 boolean flag = false;
 
+                // 尾数为6的数
                 if (i % 10 == 6 ) {
                     flag = true;
                 }
 
+                // 尾数8则其后两位尾数必为28
                 if (i % 10 == 8) {
                     if (i % 100 == 28) {
                         flag = true;
@@ -174,7 +177,6 @@ public class ArrayUtil {
                 }
 
                 if (flag) {
-
                     for (int j = 1; j <= (i / 2); j++) {
 
                         if (i % j == 0) {

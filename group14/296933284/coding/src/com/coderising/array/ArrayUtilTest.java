@@ -83,7 +83,7 @@ public class ArrayUtilTest {
     @Test
     public void getPerfectNumbers() throws Exception {
         newArray = new int[]{6, 28, 496, 8128};
-        System.out.println(33550336 % 27);
+
         Assert.assertArrayEquals(newArray, arrayUtil.getPerfectNumbers(10000));
     }
 
