@@ -59,14 +59,14 @@ public class LinkedList<T> implements List<T> {
 
 	}
 
-//	public void addAll(Collection<T> c) {
-//
-//		Iterator<T> iter = (Iterator<T>) c.iterator();
-//
-//		while (iter.hasNext()) {
-//			addLast(iter.next());
-//		}
-//	}
+	public void addAll(Collection<T> c) {
+
+		Iterator<T> iter = (Iterator<T>) c.iterator();
+
+		while (iter.hasNext()) {
+			addLast(iter.next());
+		}
+	}
 
 	@Override
 	public T get(int index) {

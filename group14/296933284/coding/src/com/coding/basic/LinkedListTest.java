@@ -1,9 +1,13 @@
 package com.coding.basic;
 
+import org.intellij.lang.annotations.Flow;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Collection;
 
 import static org.junit.Assert.*;
 
@@ -38,6 +42,11 @@ public class LinkedListTest {
     public void add1() throws Exception {
         bookList.add("python");
         Assert.assertEquals("python", bookList.removeLast());
+    }
+
+    @Test
+    public void addAll() throws Exception {
+
     }
 
     @Test

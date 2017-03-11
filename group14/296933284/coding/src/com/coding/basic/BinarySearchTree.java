@@ -3,8 +3,8 @@ package com.coding.basic;
 public class BinarySearchTree<T extends Comparable> {
 
 	private T data;
-	private BinarySearchTree leftChild;
-	private BinarySearchTree rightChild;
+	private BinarySearchTree<T> leftChild;
+	private BinarySearchTree<T> rightChild;
 
 	public BinarySearchTree() {
 		super();
@@ -22,11 +22,11 @@ public class BinarySearchTree<T extends Comparable> {
 		return data;
 	}
 
-	public BinarySearchTree getLeftChild() {
+	public BinarySearchTree<T> getLeftChild() {
 		return leftChild;
 	}
 
-	public BinarySearchTree getRightChild() {
+	public BinarySearchTree<T> getRightChild() {
 		return rightChild;
 	}
 
@@ -34,28 +34,29 @@ public class BinarySearchTree<T extends Comparable> {
 		this.data = data;
 	}
 
-	public void setLeftChild(BinarySearchTree leftChild) {
+	public void setLeftChild(BinarySearchTree<T> leftChild) {
 		this.leftChild = leftChild;
 	}
 
-	public void setRightChild(BinarySearchTree rightChild) {
+	public void setRightChild(BinarySearchTree<T> rightChild) {
 		this.rightChild = rightChild;
 	}
 
-	public void insert(Object obj) {
-		insert(obj, this);
+	public void insert(T element) {
+		insert(element, this);
 	}
 
-	private boolean insert(T element, BinarySearchTree node) {
+	private boolean insert(T element, BinarySearchTree<T> node) {
 
-		BinarySearchTree bstNode = new BinarySearchTree(element);
+		BinarySearchTree<T> bstNode = new BinarySearchTree(element);
+
 
 
 		return false;
 
 	}
 
-	public void inOrder(BinarySearchTree node) {
+	public void inOrder(BinarySearchTree<T> node) {
 
 		if (node != null) {
 			inOrder(node.getLeftChild());
@@ -65,9 +66,9 @@ public class BinarySearchTree<T extends Comparable> {
 
 	}
 
-	public void levelOrder(BinarySearchTree node) {
+	public void levelOrder(BinarySearchTree<T> node) {
 		Queue queue = new Queue();
-		BinarySearchTree bstNode = null;
+		BinarySearchTree<T> bstNode = null;
 		queue.enQueue(node);
 
 		while (!queue.isEmpty()) {
@@ -84,9 +85,8 @@ public class BinarySearchTree<T extends Comparable> {
 		}
 	}
 	
-	public void visit(BinarySearchTree node) {
+	public void visit(BinarySearchTree<T> node) {
 		System.out.println(node.getData());
 	}
-
 
 }
