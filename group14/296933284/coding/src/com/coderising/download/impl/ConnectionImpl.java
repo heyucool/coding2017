@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.util.Scanner;
 
 import com.coderising.download.api.Connection;
 
@@ -37,39 +36,19 @@ public class ConnectionImpl implements Connection {
 		byte[] bytes = null;
 		if (getResponsecode() == 206) {
 
-			InputStream inputStream = null;
-			ByteArrayOutputStream outputStream = null;
+			InputStream inputStream = httpURLConnection.getInputStream();
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream(endPos - startPos);
 
-			try {
-				inputStream = httpURLConnection.getInputStream();
-				outputStream = new ByteArrayOutputStream(endPos - startPos);
-
-				byte[] buffer = new byte[1024];
-				int len;
-				while ((len = inputStream.read(buffer)) != -1) {
-					outputStream.write(buffer, 0, len);
-				}
-
-				bytes = outputStream.toByteArray();
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				if (outputStream != null) {
-					try {
-						outputStream.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				if (inputStream != null) {
-					try {
-						inputStream.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
+			byte[] buffer = new byte[1024];
+			int len;
+			while ((len = inputStream.read(buffer)) != -1) {
+				outputStream.write(buffer, 0, len);
 			}
+
+			bytes = outputStream.toByteArray();
+
+			outputStream.close();
+			inputStream.close();
 		}
 
 		return bytes;
