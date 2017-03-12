@@ -5,27 +5,23 @@ import com.coderising.download.api.ConnectionException;
 import com.coderising.download.api.ConnectionManager;
 import com.coderising.download.api.DownloadListener;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.lang.reflect.InvocationTargetException;
 
 
 public class FileDownloader {
 	
-	String url;
-	
-	DownloadListener listener;
-	
-	ConnectionManager cm;
-
-	String locaPath;
+	private String url;
+	private DownloadListener listener;
+	private ConnectionManager cm;
+	private String localPath;
+    private int threadCount;
 
 	public FileDownloader(String _url) {
 		this.url = _url;
 		
 	}
-	
+
 	public void execute(){
 		// 在这里实现你的代码， 注意： 需要用多线程实现下载
 		// 这个类依赖于其他几个接口, 你需要写这几个接口的实现代码
@@ -40,34 +36,35 @@ public class FileDownloader {
 		// 4. 所有的线程都下载完成以后， 需要调用listener的notifiedFinished方法
 		
 		// 下面的代码是示例代码， 也就是说只有一个线程， 你需要改造成多线程的。
-		Connection conn = null;
+
+        Connection conn = null;
         RandomAccessFile randomAccessFile = null;
+
 		try {
 			conn = cm.open(this.url);
             int length = conn.getContentLength();
+            int size = length / threadCount;
 
-            int size = length / 3;
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < threadCount; i++) {
                 int startPos = i * size;
                 int endPos = startPos + size - 1;
 
-                if (i == 3) {
-                    endPos = length;
+                if (i == 2) {
+                    endPos = length - 1;
                 }
 
-                Connection connection = cm.open(this.url);
-                randomAccessFile = new RandomAccessFile(locaPath, "rwd");
+                randomAccessFile = new RandomAccessFile(localPath, "rwd");
                 randomAccessFile.setLength(length);
 
-                new DownloadThread(connection, randomAccessFile,startPos, endPos).start();
+                Connection connection = cm.open(this.url);
+
+                DownloadThread downloadThread = new DownloadThread(connection, randomAccessFile, startPos, endPos);
+                downloadThread.start();
+                getListener().notifyFinished();
             }
 
-
-
-		} catch (ConnectionException e) {			
+		} catch (ConnectionException e) {
 			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -76,24 +73,25 @@ public class FileDownloader {
             }
         }
 
-		
-		
-		
 	}
 	
 	public void setListener(DownloadListener listener) {
 		this.listener = listener;
 	}
 
-    public void setLocaPath(String locaPath) {
-        this.locaPath = locaPath;
+    public void setLocalPath(String localPath) {
+        this.localPath = localPath;
     }
 
     public void setConnectionManager(ConnectionManager ucm){
 		this.cm = ucm;
 	}
-	
-	public DownloadListener getListener(){
+
+    public void setThreadCount(int threadCount) {
+        this.threadCount = threadCount;
+    }
+
+    public DownloadListener getListener(){
 		return this.listener;
 	}
 	

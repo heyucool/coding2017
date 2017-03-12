@@ -17,7 +17,6 @@ public class ConnectionManagerImpl implements ConnectionManager {
 		try {
 			URL newUrl = new URL(url);
 			HttpURLConnection urlConnection = (HttpURLConnection) newUrl.openConnection();
-			urlConnection.setRequestMethod("GET");
 			connection = new ConnectionImpl(urlConnection);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

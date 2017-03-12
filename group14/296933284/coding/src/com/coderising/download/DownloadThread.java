@@ -7,24 +7,36 @@ import java.io.RandomAccessFile;
 
 public class DownloadThread extends Thread {
 
-	Connection conn;
-	RandomAccessFile randomAccessFile;
-	int startPos;
-	int endPos;
+	private RandomAccessFile randomAccessFile;
+	private Connection conn;
+	private int startPos;
+	private int endPos;
+	static int lengths = 0;
 
-	public DownloadThread(Connection conn, RandomAccessFile randomAccessFile, int startPos, int endPos) {
-		this.conn = conn;
+	public DownloadThread(Connection conn, RandomAccessFile randomAccessFile,int startPos, int endPos) {
 		this.randomAccessFile = randomAccessFile;
+		this.conn = conn;
 		this.startPos = startPos;
 		this.endPos = endPos;
 	}
+
 	public void run() {
 		try {
 			randomAccessFile.seek(startPos);
-			byte[] buffer = conn.read(startPos, endPos);
-			randomAccessFile.write(buffer);
+			byte[] bytes = conn.read(startPos, endPos);
+			lengths += bytes.length;
+			System.out.println(lengths);
+			randomAccessFile.write(bytes, 0, bytes.length);
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			if (randomAccessFile != null) {
+				try {
+					randomAccessFile.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 }

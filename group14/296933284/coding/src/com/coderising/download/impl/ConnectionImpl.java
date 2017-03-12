@@ -1,6 +1,8 @@
 package com.coderising.download.impl;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.Scanner;
 
@@ -9,8 +11,7 @@ import com.coderising.download.api.Connection;
 public class ConnectionImpl implements Connection {
 	private HttpURLConnection httpURLConnection = null;
 	private int contentLength = 0;
-	private InputStream inputStream = null;
-	private int responsecode;
+	private int responsecode = 0;
 
 	public ConnectionImpl(HttpURLConnection urlConnection) {
 		this.httpURLConnection = urlConnection;
@@ -29,10 +30,13 @@ public class ConnectionImpl implements Connection {
 	@Override
 	public byte[] read(int startPos, int endPos) throws IOException {
 
-		//httpURLConnection.setRequestProperty("Range", "bytes=" + startPos + "-" + endPos);
+		httpURLConnection.setRequestMethod("GET");
+		httpURLConnection.setRequestProperty("Range", "bytes=" + startPos + "-" + endPos);
 		httpURLConnection.setConnectTimeout(5000);
+
 		byte[] bytes = null;
-		if (getResponsecode() == 200) {
+		if (getResponsecode() == 206) {
+
 			InputStream inputStream = null;
 			ByteArrayOutputStream outputStream = null;
 
@@ -51,22 +55,23 @@ public class ConnectionImpl implements Connection {
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
-//				if (outputStream != null) {
-//					try {
-//						outputStream.close();
-//					} catch (IOException e) {
-//						e.printStackTrace();
-//					}
-//				}
-//				if (inputStream != null) {
-//					try {
-//						inputStream.close();
-//					} catch (IOException e) {
-//						e.printStackTrace();
-//					}
-//				}
+				if (outputStream != null) {
+					try {
+						outputStream.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				if (inputStream != null) {
+					try {
+						inputStream.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
+
 		return bytes;
 	}
 
@@ -94,13 +99,7 @@ public class ConnectionImpl implements Connection {
 
 	@Override
 	public void close() {
-		if (inputStream != null) {
-			try {
-				inputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+
 	}
 
 }
