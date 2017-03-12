@@ -11,22 +11,23 @@ public class DownloadThread extends Thread {
 	private Connection conn;
 	private int startPos;
 	private int endPos;
-	static int lengths = 0;
+	private static int id = 0;
 
 	public DownloadThread(Connection conn, RandomAccessFile randomAccessFile,int startPos, int endPos) {
-		this.randomAccessFile = randomAccessFile;
 		this.conn = conn;
+		this.randomAccessFile = randomAccessFile;
 		this.startPos = startPos;
 		this.endPos = endPos;
 	}
 
 	public void run() {
 		try {
+
 			randomAccessFile.seek(startPos);
 			byte[] bytes = conn.read(startPos, endPos);
-			lengths += bytes.length;
-			System.out.println(lengths);
+
 			randomAccessFile.write(bytes, 0, bytes.length);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

@@ -43,13 +43,12 @@ public class FileDownloader {
 		try {
 			conn = cm.open(this.url);
             int length = conn.getContentLength();
-            int size = length / threadCount;
-
+            int blockSize = length % threadCount == 0 ? length / threadCount : length / threadCount + 1;
             for (int i = 0; i < threadCount; i++) {
-                int startPos = i * size;
-                int endPos = startPos + size - 1;
+                int startPos = i * blockSize;
+                int endPos = startPos + blockSize - 1;
 
-                if (i == 2) {
+                if (i == threadCount - 1) {
                     endPos = length - 1;
                 }
 
@@ -60,9 +59,9 @@ public class FileDownloader {
 
                 DownloadThread downloadThread = new DownloadThread(connection, randomAccessFile, startPos, endPos);
                 downloadThread.start();
-                getListener().notifyFinished();
-            }
 
+            }
+            getListener().notifyFinished();
 		} catch (ConnectionException e) {
 			e.printStackTrace();
         } catch (IOException e) {

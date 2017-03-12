@@ -14,9 +14,10 @@ public class ConnectionManagerImpl implements ConnectionManager {
 	@Override
 	public Connection open(String url) throws ConnectionException {
 		Connection connection = null;
+		HttpURLConnection urlConnection = null;
 		try {
 			URL newUrl = new URL(url);
-			HttpURLConnection urlConnection = (HttpURLConnection) newUrl.openConnection();
+			urlConnection = (HttpURLConnection) newUrl.openConnection();
 			connection = new ConnectionImpl(urlConnection);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

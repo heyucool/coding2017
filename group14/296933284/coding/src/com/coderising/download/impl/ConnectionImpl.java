@@ -77,20 +77,25 @@ public class ConnectionImpl implements Connection {
 
 	@Override
 	public int getContentLength() {
-		Scanner input = null;
-		try {
-			input = new Scanner(httpURLConnection.getInputStream());
+		InputStream inputStream = null;
 
-			while (input.hasNext()) {
-				String line = input.nextLine();
-				contentLength += line.length();
+		try {
+			inputStream = httpURLConnection.getInputStream();
+			byte[] buffer = new byte[1024];
+			int len = 0;
+			while ((len = inputStream.read(buffer)) != -1) {
+				contentLength += len;
 			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			if (input != null) {
-				input.close();
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 
