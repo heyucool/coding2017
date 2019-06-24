@@ -3,19 +3,14 @@ package com.collection.list;
 import java.util.Arrays;
 
 public class ArrayList implements List{
-    public static void main(String[] args) {
-        ArrayList arrList = new ArrayList();
-        for (int i = 0; i < 5; i++) {
-            arrList.add(i);            
-        }
-        arrList.add(5, 10);
-        System.out.println("size:" + arrList.size());
-        System.out.println("get:" + arrList.get(2));
-        System.out.println(arrList);
-        System.out.println("remove:" + arrList.remove(2));
-        System.out.println("remove:" + arrList.remove(5));
-        System.out.println(arrList);
-    }
+    /*
+     * public static void main(String[] args) { ArrayList arrList = new ArrayList();
+     * for (int i = 0; i < 5; i++) { arrList.add(i); } arrList.add(5, 10);
+     * System.out.println("size:" + arrList.size()); System.out.println("get:" +
+     * arrList.get(2)); System.out.println(arrList); System.out.println("remove:" +
+     * arrList.remove(2)); System.out.println("remove:" + arrList.remove(5));
+     * System.out.println(arrList); }
+     */
     
     private int size = 0;
     private Object[] elementData = new Object[10];
