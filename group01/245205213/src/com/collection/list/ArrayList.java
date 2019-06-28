@@ -1,67 +1,80 @@
 package com.collection.list;
 
 import java.util.Arrays;
+import java.util.Collection;
 
-public class ArrayList implements List {
+public class ArrayList<E> implements List<E> {
    
     private int size = 0;
     private Object[] elementData = new Object[10];
 
+    public ArrayList() {
+        System.out.println("test1");
+    }
+    public ArrayList(Collection<? extends E> c) {
+        size = c.size();
+        elementData = c.toArray();
+    }
+    
+    private void ensureCapacity() {
+        if (elementData.length+1 > size) {
+            elementData = Arrays.copyOf(elementData, size*3/2+1);
+        } 
+    }
+
     public String toString() {
-        Object[] oArr = new Object[size];
-        oArr = Arrays.copyOf(elementData, size);
-        return Arrays.toString(oArr);
+        return Arrays.toString(Arrays.copyOf(elementData, size)) ;
     }
 
-    public void add(Object o) {
-        if (size < 10) {
-            for (int i = 0; i < elementData.length; i++) {
-                if (elementData[i] == null) {
-                    elementData[i] = o;
-                    size++;
-                    return;
-                }
-            }
-        } else {
-            elementData = Arrays.copyOf(elementData, ++size);
-            elementData[size - 1] = o;
-        }
+    public boolean add(E e) {
+        ensureCapacity();
+        elementData[size++] = e;
+        return true;
     }
 
-    public void add(int index, Object o) {
-        if (index > size) {
-            System.out.println("索引超出范围");
-//            return;
+    public boolean add(int index, E e) {
+        if (index > size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException();
         }
-        Object[] copyArr = Arrays.copyOfRange(elementData, index, elementData.length);
-        elementData[index] = o;
-        elementData = Arrays.copyOf(elementData, elementData.length + 1);
-        System.arraycopy(copyArr, 0, elementData, index + 1, copyArr.length);
+        ensureCapacity();
+        System.arraycopy(elementData, index, elementData, index+1, size-index);
+        elementData[index] = e;
         size++;
+        return true;
     }
 
-    public Object get(int index) {
-        if (index > size - 1) {
-            System.out.println("索引超出范围");
-//            return null;
+    public E get(int index) {
+        if (index >= size) {
+            throw new ArrayIndexOutOfBoundsException();
         }
-        return elementData[index];
+        return elementData(index);
     }
 
-    public Object remove(int index) {
-        if (index > size - 1) {
-            System.out.println("索引超出范围");
-            return null;
+    @SuppressWarnings("unchecked")
+    private E elementData(int index) {
+        return (E) elementData[index];
+    }
+
+    public E remove(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException();
         }
-        Object target = elementData[index];
-        Object[] copyArr = Arrays.copyOfRange(elementData, index + 1, elementData.length);
-        elementData = Arrays.copyOf(elementData, elementData.length - 1);
-        System.arraycopy(copyArr, 0, elementData, index, copyArr.length);
-        size--;
-        return target;
+        E oldValue = elementData(index);
+        System.arraycopy(elementData, index+1, elementData, index, size-index-1);
+        elementData[--size] = null;
+        return oldValue;
     }
 
     public int size() {
         return size;
+    }
+
+
+    public boolean clear() {
+        for (int i = 0; i < elementData.length; i++) {
+            elementData[i] = null;
+        }
+        size = 0;
+        return true;
     }
 }
