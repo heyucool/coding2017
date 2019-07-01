@@ -1,118 +1,126 @@
 package com.collection.list;
 
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
-public class LinkedList implements List {
-    
-    public String toString() {
-        int index = 0;
-        Object[] objs = new Object[size];
-        Node node = head;
-        while (node != null) {
-            objs[index++] = node.data;
-            node = node.next;
-        }
-        return Arrays.toString(objs);
-    }
-    private Node head;
+public class LinkedList<E> implements List<E> {
+    private Node<E> first;
+    private Node<E> last;
     private int size = 0;
     
-    //如果存在头结点
-    public void add(Object o) {
-        if (head == null) {
-            head = new Node();
-            head.data = o;
+    public boolean add(E e) {
+        if (first == null) {
+            first = new Node<E>();
+            first.data = e;
+            last = first;
             size++;
         } else {
-            Node node = getLastNode(head); 
-            node.next = new Node();
-            node.next.data = o;
+            Node<E> node = new Node<E>();
+            node.data = e; 
+            node.pre = last;
+            last.next = node;
+            last = node;
             size++;
         }
+        return true;
     }
     
-    private Node getLastNode(Node n) {
-        if (n.next != null) {
-            return getLastNode(n.next);
-        }
-        return n/*.next = new Node() */;
+    public E getFirst() {
+        return first.data;
     }
     
-    public Object get(int index) {
+    public E getLast() {
+        return last.data;
+    }
+    
+    public E get(int index) {
+        isNotElementIndex(index);
+        return getNode(first,index).data;
+    }
+
+    private void isNotElementIndex(int index) {
         if (index > size-1 || index < 0) {
-            System.out.println("索引超出范围！");
-//            return null;
+            throw new NoSuchElementException();
         }
-        return getNode(head,index).data;
     }
     
-    private Node getNode(Node n, int index) {
-        if (index > 0) {
-            return getNode(n.next, index-1);
-        } else if (index < 0) {
-            return null;
+    private Node<E> getNode(Node<E> n, int index) {
+        if (index == 0) {
+            return n;
         }
-        return n;
+        return getNode(n.next, index-1);
     }
     
-    public Object remove(int index) {
-        Object o = getNode(head, index).data;
-        getPrevNode(head, index).next = getNextNode(head, index);
+    public E remove(int index) {
+        isNotElementIndex(index);
+        Node<E> node = getNode(first, index);
+        E e = node.data;
+        node.pre.next = node.next;
+        node.next.pre = node.pre;
+        node.data = null;
+        node.next = null;
+        node.pre = null;
         size--;
-        return o;
-    }
-    
-    private Node getPrevNode(Node n, int index) {
-        if (index > 1) {
-            return getPrevNode(n.next, index-1);
-        }
-        return n;
-    }
-    
-    private Node getNextNode(Node n, int index) {
-        if (index > size-1) {
-            System.out.println("索引超出范围！");
-            return null;
-        }
-        return getNode(head, index).next;
+        return e;
     }
     
     public int size() {
         return size;
     }
     
-    public void addFirst(Object o) {
-//        Node node = head;
-//        head.next = node;
-//        head.data = o;
-//        size++;
-        Node node = new Node();
-        node.next = head;
-        node.data = o;
-        head = node;
+    public void addFirst(E e) {
+        Node<E> node = new Node<E>();
+        node.next = first;
+        node.data = e;
+        first.pre = node;
+        first = node;
         size++;
     }
     
-    public Object removeFirst() {
-        Object o = head.data;
-        Node node = head.next;
-        head = node;
+    public E removeFirst() {
+        E e = first.data;
+        Node<E> next = first.next;
+        first.next = null;
+        first.data = null;
+        first = next;
         size--;
-        return o;
+        return e;
     }
     
-    private static class Node {
-        Object data;
-        Node next;
-        Node prev;
+    private static class Node<E> {
+        E data;
+        Node<E> next;
+        Node<E> pre;
     }
 
-    public void add(int index, Object o) {
-        Node node = new Node();
-        node.data = o;
-        node.next = getNode(head, index);
-        getPrevNode(head, index).next = node;
+    public boolean add(int index, E e) {
+        Node<E> node = new Node<E>();
+        Node<E> pre = getNode(first, index).pre;
+        node.data = e;
+        node.next = getNode(first, index);
+        node.next.pre = node;
+        node.pre = pre;
+        node.pre.next = node;
         size++;
+        return true;
         
+    }
+    
+    public String toString() {
+        int index = 0;
+        Object[] objs = new Object[size];
+        Node<E> node = first;
+        while (node != null) {
+            objs[index++] = node.data;
+            node = node.next;
+        }
+        return Arrays.toString(objs);
+    }
+
+
+    @Override
+    public boolean clear() {
+        // TODO Auto-generated method stub
+        return true;
     }
 }

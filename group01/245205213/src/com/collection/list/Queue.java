@@ -1,18 +1,17 @@
 package com.collection.list;
 
-public class Queue {
-    LinkedList elementData = new LinkedList();
+public class Queue<E> {
+    LinkedList<E> elementData = new LinkedList<E>();
     
     public String toString() {
         return elementData.toString();
     }
     
-    public void enQueue(Object o) {
+    public void enQueue(E o) {
         elementData.add(o);
     }
     
     public Object deQueue() {
-//        int index = elementData.size()-1;
         Object o = elementData.removeFirst();
         return  o;
     }

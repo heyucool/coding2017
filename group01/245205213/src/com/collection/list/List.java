@@ -1,14 +1,16 @@
 package com.collection.list;
 
-public interface List {
+public interface List<E> {
     
-    public void add(Object o);
+    public boolean add(E e);
     
-    public void add(int index, Object o);
+    public boolean add(int index, E e);
+
+    public E get(int index);
     
-    public Object get(int index);
+    public E remove(int index);
     
-    public Object remove(int index);
+    public boolean clear();
     
     public int size();
     

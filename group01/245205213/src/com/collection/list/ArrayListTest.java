@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ArrayListTest {
-    static ArrayList<Integer> al;
+    private ArrayList<Integer> al;
     @BeforeEach
     void setUp() throws Exception {
         al = new ArrayList<Integer>(Arrays.asList(1,2,3,4,5,6,7,8,9,10,11));

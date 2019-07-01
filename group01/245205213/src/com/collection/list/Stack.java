@@ -1,34 +1,42 @@
 package com.collection.list;
 
-public class Stack {
-    private ArrayList elementData = new ArrayList();
+import java.util.EmptyStackException;
+
+public class Stack<E> {
+    private ArrayList<E> elementData = new ArrayList<E>();
     
     public String toString() {
         return elementData.toString();
     }
     
-    public void push(Object o) {
-          elementData.add(o);
+    public E push(E e) {
+          elementData.add(e);
+          return e;
     }
     
-    public Object pop() {
+    public synchronized E pop() {
         int indexLast = elementData.size()-1;
-        Object o = elementData.get(indexLast);
+        isNotIndex(indexLast);
+        E e = elementData.get(indexLast);
         elementData.remove(indexLast);
-        return o;
+        return e;
     }
     
-    public Object peek() {
+    public synchronized E peek() {
         int indexLast = elementData.size()-1;
-        Object o = elementData.get(indexLast);
-        return o;
+        isNotIndex(indexLast);
+        E e = elementData.get(indexLast);
+        return e;
+    }
+
+    private void isNotIndex(int indexLast) {
+        if (indexLast == -1) {
+            throw new EmptyStackException();
+        }
     }
     
     public boolean isEmpty() {
-        if (elementData.size() == 0) {
-            return true;
-        }
-        return false;
+        return size() == 0;
     }
     
     public int size() {
